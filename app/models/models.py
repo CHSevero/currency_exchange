@@ -4,10 +4,12 @@ from datetime import datetime, timezone
 
 Base = declarative_base()
 
+
 class Transaction(Base):
     """SQLAlchemy model for currency conversion transactions."""
+
     __tablename__ = "transactions"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String, index=True)
     source_currency = Column(String(3))  # ISO 4217 currency code (e.g., USD)
@@ -20,9 +22,10 @@ class Transaction(Base):
 
 class ExchangeRate(Base):
     """SQLAlchemy model for storing exchange rates as backup."""
+
     __tablename__ = "exchange_rates"
-    
+
     id = Column(Integer, primary_key=True, index=True)
-    base_currency = Column(String(3)) 
+    base_currency = Column(String(3))
     rates = Column(JSON)  # JSON field to store all rates
     last_updated = Column(DateTime, default=lambda: datetime.now(timezone.utc))
