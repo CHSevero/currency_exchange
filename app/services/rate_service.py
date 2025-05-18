@@ -129,6 +129,9 @@ class RateService:
                 )
 
             data = response.json()
+            print("*" * 10)
+            print(data)
+            print("*" * 10)
 
             if "rates" not in data:
                 raise ExternalAPIException("Invalid response from exchange rate API")
