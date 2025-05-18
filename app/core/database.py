@@ -16,11 +16,12 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Base class for SQLAlchemy models
 Base = declarative_base()
 
+
 # Dependency for database session
 def get_db() -> Generator:
     """
     Dependency function that provides a SQLAlchemy session.
-    
+
     Yields:
         Session: SQLAlchemy database session
     """
