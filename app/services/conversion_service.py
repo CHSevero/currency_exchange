@@ -8,6 +8,7 @@ from app.core.exceptions import InvalidAmountException
 
 logger = logging.getLogger(__name__)
 
+
 class ConversionService:
     """Service to handle currency conversion operations"""
 
@@ -20,7 +21,7 @@ class ConversionService:
         from_currency: str,
         to_currency: str,
         amount: Decimal,
-        db: Session
+        db: Session,
     ) -> dict:
         """
         Convert currency and save transaction.
@@ -41,16 +42,14 @@ class ConversionService:
             ExternalAPIException: If exchange rate API call fails
         """
         # Validate amount
-        if amount <= Decimal('0'):
+        if amount <= Decimal("0"):
             raise InvalidAmountException(amount)
 
         # Get exchange rate
         exchange_rate = await self.rate_service.get_exchange_rate(
-            from_currency=from_currency,
-            to_currency=to_currency,
-            db=db
+            from_currency=from_currency, to_currency=to_currency, db=db
         )
-        
+
         # Ensure exchange_rate is also a Decimal
         if not isinstance(exchange_rate, Decimal):
             exchange_rate = Decimal(str(exchange_rate))
@@ -66,7 +65,7 @@ class ConversionService:
             source_amount=amount,
             target_amount=converted_amount,
             exchange_rate=exchange_rate,
-            timestamp=datetime.now(timezone.utc)
+            timestamp=datetime.now(timezone.utc),
         )
         db.add(transaction)
         db.commit()
@@ -76,14 +75,8 @@ class ConversionService:
         return {
             "transaction_id": transaction.id,
             "user_id": user_id,
-            "from": {
-                "currency": from_currency,
-                "amount": amount
-            },
-            "to": {
-                "currency": to_currency,
-                "amount": converted_amount
-            },
+            "from": {"currency": from_currency, "amount": amount},
+            "to": {"currency": to_currency, "amount": converted_amount},
             "rate": exchange_rate,
-            "timestamp": transaction.timestamp
+            "timestamp": transaction.timestamp,
         }
