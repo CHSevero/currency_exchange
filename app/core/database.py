@@ -16,6 +16,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Base class for SQLAlchemy models
 Base = declarative_base()
 
+# Store the current database engine (useful for testing)
+_engine = engine
+
 
 # Dependency for database session
 def get_db() -> Generator:
@@ -30,3 +33,15 @@ def get_db() -> Generator:
         yield db
     finally:
         db.close()
+
+
+def get_engine():
+    """Get the current database engine."""
+    return _engine
+
+
+def set_engine(new_engine):
+    """Set a new database engine (useful for testing)."""
+    global _engine, SessionLocal
+    _engine = new_engine
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)

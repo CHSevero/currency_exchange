@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
@@ -64,4 +64,4 @@ async def get_exchange_rates(
 
     rates = await rate_service._get_rates(db)
 
-    return {"base": base, "rates": rates, "timestamp": datetime.utcnow()}
+    return {"base": base, "rates": rates, "timestamp": datetime.now(timezone.utc)}

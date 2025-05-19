@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
@@ -38,39 +38,59 @@ class TransactionService:
         Raises:
             UserNotFoundException: If no transactions found for user
         """
-        # Build query
+        # Start with base user query
         query = db.query(Transaction).filter(Transaction.user_id == user_id)
 
-        # Apply date filters if provided
-        if from_date:
-            query = query.filter(Transaction.timestamp >= from_date)
-        if to_date:
-            query = query.filter(Transaction.timestamp <= to_date)
-
-        # Get total count
-        total = query.count()
-        if total == 0:
+        # First check if user has any transactions
+        if query.count() == 0:
             raise UserNotFoundException(user_id)
 
-        # Order by timestamp (newest first) and apply pagination
+        logger.info("\nConstructing query with filters:")
+        logger.info(f"User ID: {user_id}")
+        logger.info(f"From date: {from_date}")
+        logger.info(f"To date: {to_date}")
+
+        # Apply date filters
+        if from_date:
+            # Ensure UTC timezone
+            from_date = from_date.astimezone(timezone.utc)
+            logger.info(f"Filtering transactions >= {from_date}")
+            query = query.filter(Transaction.timestamp >= from_date)
+
+        if to_date:
+            # Ensure UTC timezone
+            to_date = to_date.astimezone(timezone.utc)
+            logger.info(f"Filtering transactions <= {to_date}")
+            query = query.filter(Transaction.timestamp <= to_date)
+
+        # Get filtered count
+        filtered_count = query.count()
+        logger.info(f"Found {filtered_count} transactions after date filtering")
+
+        # Apply ordering (newest first)
         query = query.order_by(desc(Transaction.timestamp))
-        if limit:
-            query = query.limit(limit)
-        if offset:
+
+        # Apply pagination if specified
+        if offset is not None and offset >= 0:
             query = query.offset(offset)
+        if limit is not None and limit > 0:
+            query = query.limit(limit)
 
         # Execute query
         transactions = query.all()
 
-        # Format response
+        # Format transactions
         formatted_transactions = [self._format_transaction(tx) for tx in transactions]
 
-        return {
+        result = {
             "user_id": user_id,
             "transactions": formatted_transactions,
             "count": len(formatted_transactions),
-            "total": total,
+            "total": filtered_count,
         }
+
+        logger.info(f"Returning {len(formatted_transactions)} transactions")
+        return result
 
     def _format_transaction(self, transaction: Transaction) -> Dict:
         """
@@ -82,6 +102,11 @@ class TransactionService:
         Returns:
             Dict: Formatted transaction
         """
+        # Ensure timezone info and proper ISO format
+        timestamp = transaction.timestamp
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+            
         return {
             "transaction_id": transaction.id,
             "from": {
@@ -93,5 +118,5 @@ class TransactionService:
                 "amount": transaction.target_amount,
             },
             "rate": transaction.exchange_rate,
-            "timestamp": transaction.timestamp,
+            "timestamp": timestamp,
         }

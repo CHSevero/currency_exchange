@@ -10,7 +10,7 @@ from app.core.exceptions import ExternalAPIException, InvalidCurrencyException
 from app.models.models import ExchangeRate
 
 # Set decimal precision for monetary calculations
-getcontext().prec = 10
+getcontext().prec = 15  # Set higher precision for monetary calculations
 
 logger = logging.getLogger(__name__)
 
@@ -50,17 +50,24 @@ class RateService:
             if currency not in settings.SUPPORTED_CURRENCIES:
                 raise InvalidCurrencyException(currency)
 
+        # Same currency conversion
+        if from_currency == to_currency:
+            return Decimal("1")
+
         # Get rates with EUR as base
         rates = await self._get_rates(db)
 
         # Calculate exchange rate
         if from_currency == self.base_currency:
-            return rates[to_currency]
+            rate = rates[to_currency]
         elif to_currency == self.base_currency:
-            return Decimal("1") / rates[from_currency]
+            rate = Decimal("1") / rates[from_currency]
         else:
             # Cross rate calculation
-            return rates[to_currency] / rates[from_currency]
+            rate = rates[to_currency] / rates[from_currency]
+
+        # Set a reasonable fixed precision for all rates (9 decimal places)
+        return rate.quantize(Decimal("0.000000001"))
 
     async def _get_rates(self, db: Session) -> Dict[str, Decimal]:
         """
@@ -116,23 +123,18 @@ class RateService:
         Returns:
             Dict[str, Decimal]: Dictionary with currency codes as keys and rates as values
         """
-        params = {"base": self.base_currency}
-        if self.api_key:
-            params["access_key"] = self.api_key
+        params = {
+            "base": self.base_currency,
+            "access_key": self.api_key
+        }
 
         async with httpx.AsyncClient() as client:
             response = await client.get(self.base_url, params=params)
 
             if response.status_code != 200:
-                raise ExternalAPIException(
-                    f"API returned status code {response.status_code}"
-                )
+                raise ExternalAPIException(f"API returned status code {response.status_code}")
 
             data = response.json()
-            print("*" * 10)
-            print(data)
-            print("*" * 10)
-
             if "rates" not in data:
                 raise ExternalAPIException("Invalid response from exchange rate API")
 

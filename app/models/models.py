@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, JSON, Numeric
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime, timezone
-
-Base = declarative_base()
+from app.core.database import Base  # Import Base from database.py instead of creating new one
 
 
 class Transaction(Base):
@@ -17,7 +15,10 @@ class Transaction(Base):
     source_amount = Column(Numeric(precision=18, scale=6))
     target_amount = Column(Numeric(precision=18, scale=6))
     exchange_rate = Column(Numeric(precision=18, scale=6))
-    timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    timestamp = Column(
+        DateTime(timezone=True),  # Store timezone info
+        default=lambda: datetime.now(timezone.utc)
+    )
 
 
 class ExchangeRate(Base):
