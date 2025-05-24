@@ -26,7 +26,6 @@ def engine():
     )
     
     # Import all models to ensure they're registered with Base
-    from app.models.models import Transaction, ExchangeRate
     from app.core.database import Base
     
     # Create all tables
@@ -62,7 +61,6 @@ def db_session(engine):
 def client(engine):
     """Create a test client with the test database."""
     # Make sure all models are imported and tables exist
-    from app.models.models import Transaction, ExchangeRate
     
     yield TestClient(app)
 

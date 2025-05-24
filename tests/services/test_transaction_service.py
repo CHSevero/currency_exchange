@@ -105,7 +105,7 @@ def test_get_user_transactions_with_date_filter(transaction_service, db_session)
     
     # Set from_date to 2 days before base_time
     from_date = base_time - timedelta(days=2)
-    logger.info(f"\nTest parameters:")
+    logger.info("\nTest parameters:")
     logger.info(f"Base time: {base_time}")
     logger.info(f"From date: {from_date}")
     

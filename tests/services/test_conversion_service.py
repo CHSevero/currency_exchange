@@ -1,6 +1,6 @@
 import pytest
 from decimal import Decimal
-from datetime import datetime, timezone
+from datetime import datetime
 import respx
 from httpx import Response
 

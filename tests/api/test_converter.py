@@ -1,5 +1,4 @@
 import pytest
-from decimal import Decimal
 from fastapi.testclient import TestClient
 import respx
 from httpx import Response
