@@ -26,6 +26,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
 # Add CORS middleware
@@ -81,9 +82,9 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
 # Health check endpoint
-@app.get("/health")
+@app.get("/health", status_code=200)
 async def health_check():
-    return {"status": "ok", "api_version": "1.0.0"}
+    return {"status": "healthy"}
 
 
 if __name__ == "__main__":
