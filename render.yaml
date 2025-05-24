@@ -6,8 +6,12 @@ services:
   repo: https://github.com/CHSevero/currency_exchange
   plan: free
   region: virginia
-  buildCommand: curl -LsSf https://astral.sh/uv/install.sh | sh && $HOME/.local/bin/uv pip install -e .
-  startCommand: $HOME/.local/bin/uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+  buildCommand: |
+    export PATH="$HOME/.local/bin:$PATH"
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    source $HOME/.local/bin/env
+    uv pip install -e .
+  startCommand: uvicorn app.main:app --host 0.0.0.0 --port 8000
   autoDeployTrigger: commit
   rootDir: .
 version: "1"
