@@ -43,9 +43,8 @@ class ConversionRequest(BaseModel):
     @classmethod
     def validate_amount(cls, v: Decimal) -> Decimal:
         """Validate and normalize the decimal amount."""
-        # Ensure we're using Decimal with proper precision
-        # Typically currencies have at most 4 decimal places, with 2 being most common
-        return v.quantize(Decimal("0.0001"))
+        # Format decimal amount to 2 decimal places
+        return v.quantize(Decimal("0.01"))
 
 
 # Response Models

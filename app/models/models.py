@@ -12,9 +12,9 @@ class Transaction(Base):
     user_id = Column(String, index=True)
     source_currency = Column(String(3))  # ISO 4217 currency code (e.g., USD)
     target_currency = Column(String(3))  # ISO 4217 currency code (e.g., EUR)
-    source_amount = Column(Numeric(precision=18, scale=6))
-    target_amount = Column(Numeric(precision=18, scale=6))
-    exchange_rate = Column(Numeric(precision=18, scale=6))
+    source_amount = Column(Numeric(precision=18, scale=2))
+    target_amount = Column(Numeric(precision=18, scale=2))
+    exchange_rate = Column(Numeric(precision=8, scale=2))
     timestamp = Column(
         DateTime(timezone=True),  # Store timezone info
         default=lambda: datetime.now(timezone.utc)

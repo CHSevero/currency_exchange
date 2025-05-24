@@ -54,8 +54,9 @@ class ConversionService:
         if not isinstance(exchange_rate, Decimal):
             exchange_rate = Decimal(str(exchange_rate))
 
-        # Calculate converted amount
-        converted_amount = amount * exchange_rate
+        # Format exchange rate and converted amount to 2 decimal places
+        exchange_rate = exchange_rate.quantize(Decimal("0.01"))
+        converted_amount = (amount * exchange_rate).quantize(Decimal("0.01"))
 
         # Save transaction
         transaction = Transaction(
