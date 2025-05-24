@@ -43,7 +43,7 @@ cp .env.example .env
 
 5. Run the application:
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 Visit http://localhost:8000/docs for the interactive API documentation.
@@ -62,8 +62,8 @@ uv run pytest
 
 ### Code formatting and linting:
 ```bash
-uv run ruff format .
-uv run ruff check .
+uvx ruff format .
+uvx ruff check .
 ```
 
 ## API Documentation
