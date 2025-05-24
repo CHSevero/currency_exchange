@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   test:
@@ -27,8 +27,8 @@ jobs:
         run: |
           uv venv
           . .venv/bin/activate
-          uv pip install -e .
-          uv pip install ruff pytest
+          uv pip install -e .[test]
+          uv pip install ruff
           
       - name: Run Ruff linting
         run: |

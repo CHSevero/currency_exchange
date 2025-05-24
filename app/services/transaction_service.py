@@ -106,7 +106,7 @@ class TransactionService:
         timestamp = transaction.timestamp
         if timestamp.tzinfo is None:
             timestamp = timestamp.replace(tzinfo=timezone.utc)
-            
+
         return {
             "transaction_id": transaction.id,
             "from": {
