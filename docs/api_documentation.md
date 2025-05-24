@@ -47,7 +47,7 @@ EXCHANGE_RATE_API_KEY=your_api_key_here
 
 5. Run the application:
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 ## API Endpoints
@@ -235,8 +235,8 @@ uv run pytest -n auto
 ### Code Style
 The project uses Ruff for linting and formatting:
 ```bash
-uv run ruff check .
-uv run ruff format .
+uvx ruff check .
+uvx run ruff format .
 ```
 
 ### CI/CD
