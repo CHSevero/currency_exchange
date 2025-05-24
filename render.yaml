@@ -1,14 +1,14 @@
+# Exported from Render on 2025-05-24T14:00:58Z
 services:
-  - type: web
-    name: currency-exchange
-    env: python
-    buildCommand: curl -LsSf https://astral.sh/uv/install.sh | sh && $HOME/.cargo/bin/uv pip install -e .
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.13.0
-      - key: PORT
-        value: 8000
-      - key: DATABASE_URL
-        sync: false # Render will set this to a PostgreSQL database URL
-    healthCheckPath: /health
+- type: web
+  name: currency_exchange
+  runtime: python
+  repo: https://github.com/CHSevero/currency_exchange
+  plan: free
+  region: virginia
+  buildCommand: curl -LsSf https://astral.sh/uv/install.sh | sh && $HOME/.cargo/bin/uv pip install -e .
+  startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+  autoDeployTrigger: commit
+  rootDir: .
+version: "1"
+
