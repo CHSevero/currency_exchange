@@ -20,6 +20,8 @@ The Currency Exchange API is a RESTful service that enables currency conversion 
 - **Exchange Rates**: exchangeratesapi.io
 - **Documentation**: OpenAPI (Swagger)
 
+## Check a demo running version:
+https://currency-exchange-nhm9.onrender.com/docs
 ## Installation
 
 1. Clone the repository
