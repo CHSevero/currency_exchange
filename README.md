@@ -4,8 +4,8 @@ A FastAPI-based REST API for currency conversion with transaction tracking.
 
 [![CI/CD](https://github.com/CHSevero/currency_exchange/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/CHSevero/currency_exchange/actions/workflows/ci-cd.yml)
 
-🚀 **Live Demo:** [https://currency-exchange-nhm9.onrender.com/docs](https://currency-exchange-nhm9.onrender.com/docs)
-
+🚀 **Live Demo:** [https://currency-exchange-nhm9.onrender.com/docs](https://currency-exchange-nhm9.onrender.com/docs)  
+⏳ *Note: Initial load may take up to 2 minutes if the application is in sleep mode.*
 
 ## Features
 
