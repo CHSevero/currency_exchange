@@ -123,16 +123,15 @@ class RateService:
         Returns:
             Dict[str, Decimal]: Dictionary with currency codes as keys and rates as values
         """
-        params = {
-            "base": self.base_currency,
-            "access_key": self.api_key
-        }
+        params = {"base": self.base_currency, "access_key": self.api_key}
 
         async with httpx.AsyncClient() as client:
             response = await client.get(self.base_url, params=params)
 
             if response.status_code != 200:
-                raise ExternalAPIException(f"API returned status code {response.status_code}")
+                raise ExternalAPIException(
+                    f"API returned status code {response.status_code}"
+                )
 
             data = response.json()
             if "rates" not in data:

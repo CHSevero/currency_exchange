@@ -20,15 +20,9 @@ async def get_user_transactions(
     limit: Optional[int] = Query(
         None, gt=0, description="Maximum number of transactions to return"
     ),
-    offset: Optional[int] = Query(
-        None, ge=0, description="Offset for pagination"
-    ),
-    from_date: Optional[str] = Query(
-        None, description="Filter from date (ISO format)"
-    ),
-    to_date: Optional[str] = Query(
-        None, description="Filter to date (ISO format)"
-    ),
+    offset: Optional[int] = Query(None, ge=0, description="Offset for pagination"),
+    from_date: Optional[str] = Query(None, description="Filter from date (ISO format)"),
+    to_date: Optional[str] = Query(None, description="Filter to date (ISO format)"),
     db: Session = Depends(get_db),
 ):
     """
@@ -46,11 +40,11 @@ async def get_user_transactions(
         # Parse the date strings and ensure UTC timezone
         from_date_obj = None
         to_date_obj = None
-        
+
         if from_date:
             try:
                 # Handle both ISO formats (with Z or +00:00)
-                parsed_date = from_date.replace('Z', '+00:00')
+                parsed_date = from_date.replace("Z", "+00:00")
                 from_date_obj = datetime.fromisoformat(parsed_date)
                 # Convert to UTC if not already
                 if from_date_obj.tzinfo is None:
@@ -62,14 +56,14 @@ async def get_user_transactions(
                     status_code=400,
                     detail={
                         "error": "Invalid date format for from_date",
-                        "detail": f"Please provide date in ISO format (e.g., 2025-05-18T00:00:00+00:00 or 2025-05-18T00:00:00Z). Error: {str(e)}"
-                    }
+                        "detail": f"Please provide date in ISO format (e.g., 2025-05-18T00:00:00+00:00 or 2025-05-18T00:00:00Z). Error: {str(e)}",
+                    },
                 )
 
         if to_date:
             try:
                 # Handle both ISO formats (with Z or +00:00)
-                parsed_date = to_date.replace('Z', '+00:00')
+                parsed_date = to_date.replace("Z", "+00:00")
                 to_date_obj = datetime.fromisoformat(parsed_date)
                 # Convert to UTC if not already
                 if to_date_obj.tzinfo is None:
@@ -81,8 +75,8 @@ async def get_user_transactions(
                     status_code=400,
                     detail={
                         "error": "Invalid date format for to_date",
-                        "detail": f"Please provide date in ISO format (e.g., 2025-05-18T00:00:00+00:00 or 2025-05-18T00:00:00Z). Error: {str(e)}"
-                    }
+                        "detail": f"Please provide date in ISO format (e.g., 2025-05-18T00:00:00+00:00 or 2025-05-18T00:00:00Z). Error: {str(e)}",
+                    },
                 )
 
         result = transaction_service.get_user_transactions(
@@ -95,12 +89,8 @@ async def get_user_transactions(
         )
 
         return result
-        
+
     except ValueError as e:
         raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "Date parsing error",
-                "detail": str(e)
-            }
+            status_code=400, detail={"error": "Date parsing error", "detail": str(e)}
         )
