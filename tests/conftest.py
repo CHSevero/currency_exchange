@@ -11,14 +11,6 @@ from app.main import app
 
 
 @pytest.fixture(scope="function")
-def test_app():
-    """Create a fresh app instance for each test."""
-    from app.main import app  # local import for test isolation
-
-    return app
-
-
-@pytest.fixture(scope="function")
 def engine():
     """Create a new test database engine for each test."""
     # Create a new in-memory database for each test
@@ -27,9 +19,6 @@ def engine():
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
-
-    # Import all models to ensure they're registered with Base
-    from app.core.database import Base
 
     # Create all tables
     Base.metadata.create_all(bind=test_engine)
